@@ -1,18 +1,13 @@
 function removeDisplayName(char)
-    local humanoid = char.Humanoid
-    local origName = humanoid.DisplayName
-    humanoid.DisplayName = string.format("%s (@%s)", origName, char.Name)
+	local humanoid = char.Humanoid
+	local origName = humanoid.DisplayName
+	humanoid.DisplayName = string.format("%s (@%s)", char.Name, origName)
 end
 
-for _, p in pairs(game.Players:GetPlayers()) do
-    removeDisplayName(p.Character)
+for _, p in game.Players:GetPlayers() do
+	removeDisplayName(p.Character)
+	p.CharacterAdded:Connect(function(c)
+		c:WaitForChild("Humanoid")
+		removeDisplayName(c)
+	end)
 end
-
-workspace.Players.ChildAdded:Connect(function(child)
-    if child:IsA("Model") then
-        local h = child:WaitForChild("Humanoid", 6)
-        if h then
-            removeDisplayName(child)
-        end
-    end
-end)
